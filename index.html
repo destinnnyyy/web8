@@ -3,15 +3,101 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Обратная связь</title>
+    <meta name="description" content="Студия веб-дизайна Nova: создаём сайты и интерфейсы, которые приятно использовать.">
+    <title>Nova — студия веб-дизайна</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <main class="hero">
-        <h1>Свяжитесь с нами</h1>
-        <p>Есть вопрос или предложение? Напишите нам.</p>
-        <button type="button" id="open-form" class="btn">Обратная связь</button>
+    <header class="header">
+        <div class="container header__inner">
+            <a class="logo" href="#top">Nova<span>.</span></a>
+            <nav class="nav" aria-label="Основная навигация">
+                <a href="#services">Услуги</a>
+                <a href="#about">О нас</a>
+                <a href="#process">Как работаем</a>
+                <a href="#contacts">Контакты</a>
+            </nav>
+            <button type="button" class="btn btn--small js-open-form">Написать нам</button>
+        </div>
+    </header>
+
+    <main id="top">
+        <section class="hero">
+            <div class="container hero__inner">
+                <p class="badge">Веб-дизайн и разработка</p>
+                <h1>Сайты, которые <span class="accent">запоминаются</span> и приносят клиентов</h1>
+                <p class="lead">Проектируем, рисуем и запускаем сайты и интерфейсы. Быстро, аккуратно и с вниманием к деталям.</p>
+                <div class="hero__actions">
+                    <button type="button" class="btn js-open-form">Обсудить проект</button>
+                    <a class="btn btn--ghost" href="#services">Что мы делаем</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="services">
+            <div class="container">
+                <h2 class="section__title">Услуги</h2>
+                <p class="section__sub">Берём проект от идеи до запуска.</p>
+                <div class="cards">
+                    <article class="card">
+                        <span class="card__num">01</span>
+                        <h3>Лендинги</h3>
+                        <p>Одностраничные сайты, которые чётко объясняют ваше предложение и приводят к заявке.</p>
+                    </article>
+                    <article class="card">
+                        <span class="card__num">02</span>
+                        <h3>Корпоративные сайты</h3>
+                        <p>Многостраничные сайты компаний с удобной структурой и адаптацией под любые экраны.</p>
+                    </article>
+                    <article class="card">
+                        <span class="card__num">03</span>
+                        <h3>Интерфейсы и прототипы</h3>
+                        <p>Продумываем сценарии, рисуем макеты и проверяем идеи до начала разработки.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section--tint" id="about">
+            <div class="container about">
+                <div>
+                    <h2 class="section__title">О нас</h2>
+                    <p>Мы небольшая команда дизайнеров и разработчиков. Делаем сайты, в которых удобно ориентироваться и которые одинаково хорошо работают на телефоне и на компьютере.</p>
+                </div>
+                <ul class="stats">
+                    <li><strong>50+</strong><span>проектов</span></li>
+                    <li><strong>5 лет</strong><span>на рынке</span></li>
+                    <li><strong>98%</strong><span>довольных клиентов</span></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section" id="process">
+            <div class="container">
+                <h2 class="section__title">Как мы работаем</h2>
+                <ol class="steps">
+                    <li><b>Знакомство.</b> Обсуждаем цели и задачи проекта.</li>
+                    <li><b>Дизайн.</b> Рисуем макеты и согласовываем их с вами.</li>
+                    <li><b>Разработка.</b> Верстаем и подключаем всё необходимое.</li>
+                    <li><b>Запуск.</b> Публикуем сайт и сопровождаем его после релиза.</li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="section cta" id="contacts">
+            <div class="container cta__inner">
+                <h2>Есть идея? Давайте обсудим</h2>
+                <p>Оставьте сообщение, и мы свяжемся с вами в ближайшее время.</p>
+                <button type="button" class="btn btn--light js-open-form">Обратная связь</button>
+            </div>
+        </section>
     </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Nova. Учебный проект.</p>
+        </div>
+    </footer>
 
     <div id="popup" class="overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title">
         <div class="popup">
@@ -20,7 +106,9 @@
             <form id="feedback-form" novalidate>
                 <div class="field">
                     <label for="fio">ФИО</label>
-                    <input type="text" id="fio" name="fio" autocomplete="name" required>
+                    <input type="text" id="fio" name="fio" autocomplete="name" required
+                        pattern="[A-Za-zА-Яа-яЁё .'\-]{2,100}"
+                        title="Только буквы, пробел, точка, дефис и апостроф">
                 </div>
                 <div class="field">
                     <label for="email">Email</label>
@@ -28,7 +116,9 @@
                 </div>
                 <div class="field">
                     <label for="phone">Телефон</label>
-                    <input type="tel" id="phone" name="phone" autocomplete="tel" required>
+                    <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" required
+                        pattern="\+?[0-9\s\-\(\)]{10,20}"
+                        title="Только цифры, например +7 900 123-45-67">
                 </div>
                 <div class="field">
                     <label for="organization">Организация</label>
