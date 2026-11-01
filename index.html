@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Обратная связь</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="hero">
+        <h1>Свяжитесь с нами</h1>
+        <p>Есть вопрос или предложение? Напишите нам.</p>
+        <button type="button" id="open-form" class="btn">Обратная связь</button>
+    </main>
+
+    <div id="popup" class="overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+        <div class="popup">
+            <button type="button" id="close-form" class="close" aria-label="Закрыть">&times;</button>
+            <h2 id="popup-title">Обратная связь</h2>
+            <form id="feedback-form" novalidate>
+                <div class="field">
+                    <label for="fio">ФИО</label>
+                    <input type="text" id="fio" name="fio" autocomplete="name" required>
+                </div>
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" autocomplete="email" required>
+                </div>
+                <div class="field">
+                    <label for="phone">Телефон</label>
+                    <input type="tel" id="phone" name="phone" autocomplete="tel" required>
+                </div>
+                <div class="field">
+                    <label for="organization">Организация</label>
+                    <input type="text" id="organization" name="organization" autocomplete="organization">
+                </div>
+                <div class="field">
+                    <label for="message">Сообщение</label>
+                    <textarea id="message" name="message" rows="2" required></textarea>
+                </div>
+                <div class="agree">
+                    <input type="checkbox" id="agree" name="agree" required>
+                    <label for="agree">Согласен с политикой обработки персональных данных</label>
+                </div>
+                <button type="submit" id="submit-button" class="btn submit">Отправить</button>
+                <p id="form-status" class="status" role="status" hidden></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
