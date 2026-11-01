@@ -7,10 +7,13 @@
     const STORAGE_KEY = "feedbackFormData";
     const POPUP_HASH = "#feedback";
     const FIELD_NAMES = ["fio", "email", "phone", "organization", "message", "agree"];
+    // Символы, которые нельзя вводить: цифры в ФИО и буквы в телефоне
+    const FIO_FORBIDDEN = /[^A-Za-zА-Яа-яЁё\s.'\-]/g;
+    const PHONE_FORBIDDEN = /[^0-9+\s\-\(\)]/g;
 
     const overlay = document.getElementById("popup");
     const form = document.getElementById("feedback-form");
-    const openButton = document.getElementById("open-form");
+    const openButtons = document.querySelectorAll(".js-open-form");
     const closeButton = document.getElementById("close-form");
     const submitButton = document.getElementById("submit-button");
     const statusBox = document.getElementById("form-status");
@@ -20,6 +23,18 @@
         statusBox.hidden = text === "";
         statusBox.classList.toggle("is-error", isError);
         statusBox.classList.toggle("is-success", !isError && text !== "");
+    }
+
+    function sanitize(input, forbidden) {
+        const cleaned = input.value.replace(forbidden, "");
+        if (cleaned !== input.value) {
+            input.value = cleaned;
+        }
+    }
+
+    function sanitizeAll() {
+        sanitize(form.elements.fio, FIO_FORBIDDEN);
+        sanitize(form.elements.phone, PHONE_FORBIDDEN);
     }
 
     function saveData() {
@@ -134,10 +149,22 @@
         });
     }
 
-    restoreData();
+    function handleInput(event) {
+        if (event.target === form.elements.fio) {
+            sanitize(form.elements.fio, FIO_FORBIDDEN);
+        } else if (event.target === form.elements.phone) {
+            sanitize(form.elements.phone, PHONE_FORBIDDEN);
+        }
+        saveData();
+    }
 
-    openButton.addEventListener("click", function () {
-        openPopup(true);
+    restoreData();
+    sanitizeAll();
+
+    openButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            openPopup(true);
+        });
     });
     closeButton.addEventListener("click", requestClose);
     overlay.addEventListener("click", function (event) {
@@ -150,7 +177,7 @@
             requestClose();
         }
     });
-    form.addEventListener("input", saveData);
+    form.addEventListener("input", handleInput);
     form.addEventListener("change", saveData);
     form.addEventListener("submit", handleSubmit);
 
