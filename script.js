@@ -4,7 +4,7 @@
     "use strict";
 
     // Замените YOUR_FORM_ID на идентификатор формы из личного кабинета formcarry.com
-    const ENDPOINT = "https://formcarry.com/s/YOUR_FORM_ID";
+    const ENDPOINT = "https://formcarry.com/s/EAIyrmhZri2";
     const STORAGE_KEY = "feedback-form-draft";
     const POPUP_HASH = "#feedback";
     const TEXT_FIELDS = ["fullName", "email", "phone", "organization", "message"];
