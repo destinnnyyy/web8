@@ -164,6 +164,13 @@
         });
     });
 
+    // Поле ФИО: убираем всё, кроме букв, пробелов и дефиса
+    const fullNameInput = form.elements.fullName;
+
+    fullNameInput.addEventListener("input", function () {
+        fullNameInput.value = fullNameInput.value.replace(/[^\p{L}\s-]/gu, "");
+    });
+
     form.addEventListener("input", function () {
         saveDraft();
         if (statusLine.dataset.kind !== "hint") {

@@ -36,7 +36,8 @@
 
             <label class="field">
                 <span>ФИО</span>
-                <input type="text" name="fullName" autocomplete="name" required maxlength="120">
+                <input type="text" name="fullName" autocomplete="name" required maxlength="120"
+                    pattern="[\p{L}\s\-]+" title="Только буквы, пробелы и дефис">
             </label>
             <label class="field">
                 <span>Email</span>
