@@ -1,197 +1,183 @@
-/*jslint browser, long */
+/*jslint browser */
+
 (function () {
     "use strict";
 
-    // Вставьте сюда свой адрес формы: https://formcarry.com/s/<ID>
+    // Замените YOUR_FORM_ID на идентификатор формы из личного кабинета formcarry.com
     const ENDPOINT = "https://formcarry.com/s/YOUR_FORM_ID";
-    const STORAGE_KEY = "feedbackFormData";
+    const STORAGE_KEY = "feedback-form-draft";
     const POPUP_HASH = "#feedback";
-    const FIELD_NAMES = ["fio", "email", "phone", "organization", "message", "agree"];
-    // Символы, которые нельзя вводить: цифры в ФИО и буквы в телефоне
-    const FIO_FORBIDDEN = /[^A-Za-zА-Яа-яЁё\s.'\-]/g;
-    const PHONE_FORBIDDEN = /[^0-9+\s\-\(\)]/g;
+    const TEXT_FIELDS = ["fullName", "email", "phone", "organization", "message"];
 
-    const overlay = document.getElementById("popup");
+    const MESSAGES = {
+        hint: "Поле «Организация» можно пропустить.",
+        pending: "Отправляем…",
+        success: "Готово! Сообщение отправлено.",
+        error: "Не отправлено. Проверьте соединение и повторите."
+    };
+
+    const popup = document.getElementById("popup");
     const form = document.getElementById("feedback-form");
-    const openButtons = document.querySelectorAll(".js-open-form");
-    const closeButton = document.getElementById("close-form");
+    const statusLine = document.getElementById("form-status");
     const submitButton = document.getElementById("submit-button");
-    const statusBox = document.getElementById("form-status");
+    const openButton = document.getElementById("open-button");
+    const closeButton = document.getElementById("close-button");
 
-    function showStatus(text, isError) {
-        statusBox.textContent = text;
-        statusBox.hidden = text === "";
-        statusBox.classList.toggle("is-error", isError);
-        statusBox.classList.toggle("is-success", !isError && text !== "");
+    function setStatus(kind) {
+        statusLine.dataset.kind = kind;
+        statusLine.textContent = MESSAGES[kind];
     }
 
-    function sanitize(input, forbidden) {
-        const cleaned = input.value.replace(forbidden, "");
-        if (cleaned !== input.value) {
-            input.value = cleaned;
+    // LocalStorage
+
+    function saveDraft() {
+        const draft = {};
+        TEXT_FIELDS.forEach(function (name) {
+            draft[name] = form.elements[name].value;
+        });
+        draft.consent = form.elements.consent.checked;
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+        } catch (ignore) {
+            // Хранилище недоступно: форма продолжает работать без сохранения
         }
     }
 
-    function sanitizeAll() {
-        sanitize(form.elements.fio, FIO_FORBIDDEN);
-        sanitize(form.elements.phone, PHONE_FORBIDDEN);
-    }
-
-    function saveData() {
-        const data = {};
-        FIELD_NAMES.forEach(function (name) {
-            const field = form.elements[name];
-            data[name] = (
-                field.type === "checkbox"
-                ? field.checked
-                : field.value
-            );
-        });
+    function restoreDraft() {
+        let draft = null;
         try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            draft = JSON.parse(localStorage.getItem(STORAGE_KEY));
         } catch (ignore) {
+            draft = null;
+        }
+        if (!draft) {
             return;
         }
-    }
-
-    function restoreData() {
-        let data = {};
-        try {
-            data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-        } catch (ignore) {
-            data = {};
-        }
-        FIELD_NAMES.forEach(function (name) {
-            const field = form.elements[name];
-            if (data[name] !== undefined) {
-                if (field.type === "checkbox") {
-                    field.checked = Boolean(data[name]);
-                } else {
-                    field.value = data[name];
-                }
+        TEXT_FIELDS.forEach(function (name) {
+            if (typeof draft[name] === "string") {
+                form.elements[name].value = draft[name];
             }
         });
+        form.elements.consent.checked = draft.consent === true;
     }
 
-    function clearData() {
+    function clearDraft() {
         try {
             localStorage.removeItem(STORAGE_KEY);
         } catch (ignore) {
-            return;
+            // Нечего очищать
         }
-        form.reset();
     }
 
-    function openPopup(push) {
-        overlay.classList.add("is-open");
-        document.body.classList.add("no-scroll");
-        if (push) {
-            history.pushState({popup: true}, "", POPUP_HASH);
+    // Попап и History API
+
+    function showPopup() {
+        if (!popup.open) {
+            setStatus("hint");
+            popup.showModal();
         }
-        form.elements.fio.focus();
     }
 
-    function closePopup() {
-        overlay.classList.remove("is-open");
-        document.body.classList.remove("no-scroll");
-        showStatus("", false);
+    function hidePopup() {
+        if (popup.open) {
+            popup.close();
+        }
+    }
+
+    function openPopup() {
+        history.pushState({popup: true}, "", POPUP_HASH);
+        showPopup();
     }
 
     function requestClose() {
-        if (history.state && history.state.popup) {
+        if (location.hash === POPUP_HASH) {
             history.back();
         } else {
-            closePopup();
+            hidePopup();
         }
     }
 
-    function handleSubmit(event) {
-        event.preventDefault();
-        if (!form.reportValidity()) {
-            return;
+    window.addEventListener("popstate", function () {
+        if (location.hash === POPUP_HASH) {
+            showPopup();
+        } else {
+            hidePopup();
         }
-        const payload = {};
-        FIELD_NAMES.forEach(function (name) {
-            const field = form.elements[name];
-            if (field.type === "checkbox") {
-                payload[name] = (
-                    field.checked
-                    ? "Да"
-                    : "Нет"
-                );
-            } else {
-                payload[name] = field.value;
-            }
+    });
+
+    openButton.addEventListener("click", openPopup);
+    closeButton.addEventListener("click", requestClose);
+
+    popup.addEventListener("cancel", function (event) {
+        event.preventDefault();
+        requestClose();
+    });
+
+    popup.addEventListener("click", function (event) {
+        if (event.target === popup) {
+            requestClose();
+        }
+    });
+
+    // Отправка
+
+    function collectData() {
+        const data = {};
+        TEXT_FIELDS.forEach(function (name) {
+            data[name] = form.elements[name].value.trim();
         });
+        return data;
+    }
 
-        submitButton.disabled = true;
-        showStatus("Отправка…", false);
-
-        fetch(ENDPOINT, {
-            body: JSON.stringify(payload),
+    function sendForm(data) {
+        return fetch(ENDPOINT, {
+            method: "POST",
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
             },
-            method: "POST"
+            body: JSON.stringify(data)
         }).then(function (response) {
-            if (!response.ok) {
-                throw new Error("HTTP " + response.status);
-            }
-            return response.json();
-        }).then(function () {
-            clearData();
-            showStatus("Спасибо! Ваше сообщение отправлено.", false);
+            return response.json().catch(function () {
+                return {};
+            }).then(function (body) {
+                if (!response.ok || body.status === "error") {
+                    throw new Error("Server error " + response.status);
+                }
+            });
+        });
+    }
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        submitButton.disabled = true;
+        setStatus("pending");
+
+        sendForm(collectData()).then(function () {
+            form.reset();
+            clearDraft();
+            setStatus("success");
         }).catch(function () {
-            showStatus("Не удалось отправить форму. Попробуйте ещё раз позже.", true);
-        }).finally(function () {
+            setStatus("error");
+        }).then(function () {
             submitButton.disabled = false;
         });
-    }
-
-    function handleInput(event) {
-        if (event.target === form.elements.fio) {
-            sanitize(form.elements.fio, FIO_FORBIDDEN);
-        } else if (event.target === form.elements.phone) {
-            sanitize(form.elements.phone, PHONE_FORBIDDEN);
-        }
-        saveData();
-    }
-
-    restoreData();
-    sanitizeAll();
-
-    openButtons.forEach(function (button) {
-        button.addEventListener("click", function () {
-            openPopup(true);
-        });
     });
-    closeButton.addEventListener("click", requestClose);
-    overlay.addEventListener("click", function (event) {
-        if (event.target === overlay) {
-            requestClose();
-        }
-    });
-    document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape" && overlay.classList.contains("is-open")) {
-            requestClose();
-        }
-    });
-    form.addEventListener("input", handleInput);
-    form.addEventListener("change", saveData);
-    form.addEventListener("submit", handleSubmit);
 
-    window.addEventListener("popstate", function () {
-        if (window.location.hash === POPUP_HASH) {
-            openPopup(false);
-        } else {
-            closePopup();
+    form.addEventListener("input", function () {
+        saveDraft();
+        if (statusLine.dataset.kind !== "hint") {
+            setStatus("hint");
         }
     });
 
-    // Если страницу открыли сразу по адресу с #feedback
-    if (window.location.hash === POPUP_HASH) {
-        history.replaceState(null, "", window.location.pathname + window.location.search);
-        openPopup(true);
+    // Запуск
+
+    restoreDraft();
+
+    if (location.hash === POPUP_HASH) {
+        // Страницу открыли по ссылке с формой: сохраняем «Назад» рабочим
+        history.replaceState(null, "", location.pathname + location.search);
+        openPopup();
     }
 }());

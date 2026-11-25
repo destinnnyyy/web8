@@ -3,140 +3,67 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Студия веб-дизайна Nova: создаём сайты и интерфейсы, которые приятно использовать.">
-    <title>Nova — студия веб-дизайна</title>
+    <title>Обратная связь</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700&amp;family=Unbounded:wght@700&amp;display=swap">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="header">
-        <div class="container header__inner">
-            <a class="logo" href="#top">Nova<span>.</span></a>
-            <nav class="nav" aria-label="Основная навигация">
-                <a href="#services">Услуги</a>
-                <a href="#about">О нас</a>
-                <a href="#process">Как работаем</a>
-                <a href="#contacts">Контакты</a>
-            </nav>
-            <button type="button" class="btn btn--small js-open-form">Написать нам</button>
-        </div>
-    </header>
-
-    <main id="top">
-        <section class="hero">
-            <div class="container hero__inner">
-                <p class="badge">Веб-дизайн и разработка</p>
-                <h1>Сайты, которые <span class="accent">запоминаются</span> и приносят клиентов</h1>
-                <p class="lead">Проектируем, рисуем и запускаем сайты и интерфейсы. Быстро, аккуратно и с вниманием к деталям.</p>
-                <div class="hero__actions">
-                    <button type="button" class="btn js-open-form">Обсудить проект</button>
-                    <a class="btn btn--ghost" href="#services">Что мы делаем</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="services">
-            <div class="container">
-                <h2 class="section__title">Услуги</h2>
-                <p class="section__sub">Берём проект от идеи до запуска.</p>
-                <div class="cards">
-                    <article class="card">
-                        <span class="card__num">01</span>
-                        <h3>Лендинги</h3>
-                        <p>Одностраничные сайты, которые чётко объясняют ваше предложение и приводят к заявке.</p>
-                    </article>
-                    <article class="card">
-                        <span class="card__num">02</span>
-                        <h3>Корпоративные сайты</h3>
-                        <p>Многостраничные сайты компаний с удобной структурой и адаптацией под любые экраны.</p>
-                    </article>
-                    <article class="card">
-                        <span class="card__num">03</span>
-                        <h3>Интерфейсы и прототипы</h3>
-                        <p>Продумываем сценарии, рисуем макеты и проверяем идеи до начала разработки.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="section section--tint" id="about">
-            <div class="container about">
-                <div>
-                    <h2 class="section__title">О нас</h2>
-                    <p>Мы небольшая команда дизайнеров и разработчиков. Делаем сайты, в которых удобно ориентироваться и которые одинаково хорошо работают на телефоне и на компьютере.</p>
-                </div>
-                <ul class="stats">
-                    <li><strong>50+</strong><span>проектов</span></li>
-                    <li><strong>5 лет</strong><span>на рынке</span></li>
-                    <li><strong>98%</strong><span>довольных клиентов</span></li>
-                </ul>
-            </div>
-        </section>
-
-        <section class="section" id="process">
-            <div class="container">
-                <h2 class="section__title">Как мы работаем</h2>
-                <ol class="steps">
-                    <li><b>Знакомство.</b> Обсуждаем цели и задачи проекта.</li>
-                    <li><b>Дизайн.</b> Рисуем макеты и согласовываем их с вами.</li>
-                    <li><b>Разработка.</b> Верстаем и подключаем всё необходимое.</li>
-                    <li><b>Запуск.</b> Публикуем сайт и сопровождаем его после релиза.</li>
-                </ol>
-            </div>
-        </section>
-
-        <section class="section cta" id="contacts">
-            <div class="container cta__inner">
-                <h2>Есть идея? Давайте обсудим</h2>
-                <p>Оставьте сообщение, и мы свяжемся с вами в ближайшее время.</p>
-                <button type="button" class="btn btn--light js-open-form">Обратная связь</button>
-            </div>
-        </section>
+    <main class="page">
+        <h1 class="page__title">Обратная связь</h1>
+        <p class="page__lead">Есть вопрос или предложение? Нажмите кнопку и напишите нам.</p>
+        <p>
+            <button type="button" class="cta" id="open-button">Написать нам</button>
+        </p>
     </main>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 Nova. Учебный проект.</p>
-        </div>
+    <footer class="page__footer">
+        <p>&copy; Щадей Артём, МО21</p>
     </footer>
 
-    <div id="popup" class="overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title">
-        <div class="popup">
-            <button type="button" id="close-form" class="close" aria-label="Закрыть">&times;</button>
-            <h2 id="popup-title">Обратная связь</h2>
-            <form id="feedback-form" novalidate>
-                <div class="field">
-                    <label for="fio">ФИО</label>
-                    <input type="text" id="fio" name="fio" autocomplete="name" required
-                        pattern="[A-Za-zА-Яа-яЁё .'\-]{2,100}"
-                        title="Только буквы, пробел, точка, дефис и апостроф">
-                </div>
-                <div class="field">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" autocomplete="email" required>
-                </div>
-                <div class="field">
-                    <label for="phone">Телефон</label>
-                    <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" required
-                        pattern="\+?[0-9\s\-\(\)]{10,20}"
-                        title="Только цифры, например +7 900 123-45-67">
-                </div>
-                <div class="field">
-                    <label for="organization">Организация</label>
-                    <input type="text" id="organization" name="organization" autocomplete="organization">
-                </div>
-                <div class="field">
-                    <label for="message">Сообщение</label>
-                    <textarea id="message" name="message" rows="2" required></textarea>
-                </div>
-                <div class="agree">
-                    <input type="checkbox" id="agree" name="agree" required>
-                    <label for="agree">Согласен с политикой обработки персональных данных</label>
-                </div>
-                <button type="submit" id="submit-button" class="btn submit">Отправить</button>
-                <p id="form-status" class="status" role="status" hidden></p>
-            </form>
-        </div>
-    </div>
+    <dialog class="popup" id="popup" aria-labelledby="popup-title">
+        <form class="form" id="feedback-form" method="post">
+            <div class="form__head">
+                <h2 class="form__title" id="popup-title">Написать нам</h2>
+                <button type="button" class="close" id="close-button" aria-label="Закрыть форму">
+                    <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+                        <path d="M3 3l12 12M15 3L3 15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            <p class="status" id="form-status" role="status" data-kind="hint">Поле «Организация» можно пропустить.</p>
+
+            <label class="field">
+                <span>ФИО</span>
+                <input type="text" name="fullName" autocomplete="name" required maxlength="120">
+            </label>
+            <label class="field">
+                <span>Email</span>
+                <input type="email" name="email" autocomplete="email" required maxlength="120">
+            </label>
+            <label class="field">
+                <span>Телефон</span>
+                <input type="tel" name="phone" autocomplete="tel" inputmode="tel" required
+                    pattern="\+?[0-9\s\-]{6,20}" title="Например: +7 999 123-45-67" maxlength="20">
+            </label>
+            <label class="field">
+                <span>Организация</span>
+                <input type="text" name="organization" autocomplete="organization" maxlength="120">
+            </label>
+            <label class="field field--grow">
+                <span>Сообщение</span>
+                <textarea name="message" rows="3" required maxlength="1000"></textarea>
+            </label>
+
+            <label class="consent">
+                <input type="checkbox" name="consent" required>
+                <span>Согласен с политикой обработки персональных данных</span>
+            </label>
+
+            <button type="submit" class="submit" id="submit-button">Отправить</button>
+        </form>
+    </dialog>
 
     <script src="script.js"></script>
 </body>
